@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput,
+    FlatList } from 'react-native';
+
+import GoalItem from './components/GoalItem';
 
 const image = { uri: "https://i.imgur.com/uVkX2tR_d.webp?maxwidth=128&shape=square" };
 
@@ -15,7 +18,10 @@ export default function App() {
     }
 
     function addGoalHandler() {
-        setGoals(currentGoals => [...currentGoals, {text: enteredGoalText, completed: false}])
+        setGoals(currentGoals => [
+            ...currentGoals,
+            {text: enteredGoalText, completed: false, key: Math.random().toString()}
+        ])
     }
     const goalCompleted = (index) => {
         let goalsCopy = [...goals];
@@ -36,19 +42,13 @@ export default function App() {
             <Button title="Add Goal" onPress={addGoalHandler} />
         </View>
         <View style={styles.goalsContainer}>
-        {goals.length <= 0?
-            <Text>...List of goals</Text> 
-            :
-            goals.map((goal, index) => 
-                <View key={index} 
-                style={goal.completed ? styles.goalItemCompleted : styles.goalItem}>
-                <Text  
-                onPress={() => goalCompleted(index)}
-                style={goal.completed ? {textDecorationLine: 'line-through'} : styles.goalText}>
-                {goal.text}</Text>
-                </View>
-            )    
-        }
+            {goals.length <= 0?
+                <Text>...List of goals</Text> 
+                :
+                <FlatList data={goals} renderItem={(item) => {
+                    return <GoalItem item={item} goalCompleted={goalCompleted}/>
+                }}/>  
+            }
         </View>
     </View>
   );
@@ -80,22 +80,5 @@ const styles = StyleSheet.create({
     goalsContainer: {
         flex: 4,
     },
-    goalItem: {
-        margin: 8,
-        padding: 8,
-        borderRadius: 10,
-        backgroundColor: '#5e0acc',
-        alignItems: 'center',
-    },
-    goalItemCompleted: {
-        margin: 8,
-        padding: 8,
-        borderRadius: 10,
-        backgroundColor: 'red',
-        alignItems: 'center',
-        textDecorationLine: 'line-through',
-    },
-    goalText: {
-        color: 'white',
-    },
+    
 });
