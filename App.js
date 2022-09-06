@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, FlatList, Button } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
@@ -31,15 +32,18 @@ export default function App() {
     }
 
   return (
+    <>
+    <StatusBar style="light"/>
     <View style={styles.appContainer}>
-
-        <Button title="Add A Goal" color="#5e0acc" 
-        onPress={() => setModalIsVisible(!modalIsVisible)}/>
+        <View style={styles.showModalButton}>
+            <Button title="Add A Goal" color="#5e0acc" 
+            onPress={() => setModalIsVisible(!modalIsVisible)}/>
+        </View>
         <GoalInput addGoalHandler={addGoalHandler} modalIsVisible={modalIsVisible} setModalIsVisible={setModalIsVisible}/>
 
         <View style={styles.goalsContainer}>
             {goals.length <= 0?
-                <Text>...List of goals</Text> 
+                <Text style={styles.listText}>...List of goals</Text> 
                 :
                 <FlatList data={goals} renderItem={(item) => {
                     return <GoalItem item={item} deleteHandler={deleteHandler} />
@@ -47,6 +51,7 @@ export default function App() {
             }
         </View>
     </View>
+    </>
   );
 }
 
@@ -55,9 +60,22 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 50,
         paddingHorizontal: 16,
+        // backgroundColor: 'black',
+        
+    },
+    showModalButton: {
+        margin: 25,
+        marginRight: 50,
+        marginLeft: 50,
         backgroundColor: 'black',
+        borderRadius: 10,
     },
     goalsContainer: {
         flex: 4,
-    }, 
+    },
+    listText: {
+        margin: 20,
+        color: 'white',
+        alignSelf: 'center',
+    }
 });
